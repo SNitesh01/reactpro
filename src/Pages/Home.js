@@ -1,12 +1,12 @@
 import React from 'react'
-import Banner from '../Components/Banner'
+import Products from './Products'
+//import CustomImageSlider from '../Components/ImgSlider'
 
 function Home() {
+
   return (
     <div>
-    <Banner/>
-    
-    
+    <Products/>
     </div>
   )
 }

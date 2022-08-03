@@ -41,6 +41,15 @@
       return sortOrder === 1 ? a - b : b - a;
     });
   }
+
+  //slider
+  function debounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
   
 
-  export {sorting}
+  export {sorting, debounce}

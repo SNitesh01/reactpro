@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Alert from "react-bootstrap/Alert";
-
 import './pages.css';
 import swal from 'sweetalert';
 import Joi from "joi";
@@ -19,9 +18,9 @@ const loginSchema = Joi.object({
 });
 
 
-
-async function loginUser(credentials) {
-  return fetch('https://www.mecallapi.com/api/login', {
+ 
+ async function loginUser(credentials) {
+  return  fetch('https://www.mecallapi.com/api/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

@@ -12,6 +12,7 @@ function Register() {
     address:'',
     password:""
   })
+
 console.log(form)
   const handleInputChange = (e) => {
       const {id , value} = e.target;
@@ -34,7 +35,7 @@ console.log(form)
   }
 
   const handleSubmit  = () => {
-   // console.log(username,email,mobile,address,password);
+   //console.log(username,email,mobile,address,password);
 }
 
   return (
