@@ -1,23 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Button,Table } from "react-bootstrap";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { CartContext } from "../App";
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import axios from "axios";
-
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import { CircularProgress } from "@mui/material";
+import { Link } from "react-router-dom";
+import Products from "./Products";
 
 function Cart() {
-
   const { cart, setCart } = useContext(CartContext);
-  const [Products, setProducts] = useState([]);
-
-    useEffect(() => {
-        axios("https://fakestoreapi.com/products").then(res => {
-         setProducts(res.data);
   
-        })
-       
-      }, [])
+  
 
   const subTotal = cart.items
     ?.reduce((acc, el) => acc + el.price * el.qty, 0)
@@ -26,93 +19,124 @@ function Cart() {
   const grandTotal = (subTotal - discount).toFixed(2);
 
   //console.log(subTotal, discount, grandTotal);
-
   const updateCart = (id, action) => {
     const newCartItems = { ...cart };
-    const index = newCartItems.items.findIndex(el => el.id === id);
+    const index = newCartItems.items.findIndex((el) => el.id === id);
     if (action === "inc") newCartItems.items[index].qty++;
-    else if(action === "dec") newCartItems.items[index].qty--;
+    else if (action === "dec") newCartItems.items[index].qty--;
+    localStorage.setItem("newCartItems", JSON.stringify(newCartItems));
+
+    if (action === "remove") {
+      let cartData = newCartItems;
+      let itemToBeDeleted = cartData.items.findIndex((item) => item.id === id);
+      cartData.items.splice(itemToBeDeleted, 1);
+      localStorage.setItem("newCartItems", JSON.stringify(cartData));
+    }
     setCart(newCartItems);
   };
-  //console.log(cart);
+  //console.log(cart.items);
 
+  const checkouthandler = () => { 
+    <CircularProgress />
 
-  let list = Products
-  function handleRemove(id) {
-    const newList = list.filter((item) => item.id !== id);
-    setProducts(newList)
-
-    console.log(newList);
   }
+
   return (
-    <div className="container">
-      <Table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Action</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cart.items?.map((item, id) => (
-            <tr key={id}>
-              <td>{item.title} </td>
-              <td>{item.price}</td>
-                                         
-              <td>
-                <FaMinus
-                  onClick={() => {
-                    updateCart(item.id, "dec");
-                  }}
-                />
-                <span>{item.qty}</span>
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col">
+          <h3>releted items !!</h3>
+          <Products/>
 
-                <FaPlus
-                  onClick={() => {
-                    updateCart(item.id, "inc");
-                  }}
-                />
-              </td>
-              <td>
-              <RemoveCircleIcon 
-                onClick={() =>{
-                  handleRemove(item.id)
-                }}
-               />
-              </td>
+        </div>
+     
 
-              <td>{(item.price * item.qty).toFixed(2)}</td>
+        <div className="col">
+        <h3>Cart !!</h3>
+        <Table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Action</th>
+              <th>Total</th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {cart.items?.map((item, id) => (
+              <tr key={id}>
+                <td>
+                  {
+                    <img
+                      src={item.image}
+                      width="50px"
+                      height="50px"
+                      alt=""
+                    ></img>
+                  }{" "}
+                  {item.title}
+                </td>
 
-          <tr>
-            <td>Sub Total</td>
-            <td align="right" colSpan={3}>
-              {subTotal}
-            </td>
-          </tr>
-          <tr>
-            <td>Discount</td>
-            <td align="right" colSpan={3}>
-              {discount}
-            </td>
-          </tr>
-          <tr>
-            <td>Grand Total</td>
-            <td align="right" colSpan={3}>
-              {grandTotal}
-            </td>
-          </tr>
-        </tbody>
-      </Table>
-    
-      
+                <td>{item.price}</td>
+
+                <td>
+                  <FaMinus
+                    onClick={() => {
+                      updateCart(item.id, "dec");
+                    }}
+                  />
+                  <span>{item.qty}</span>
+
+                  <FaPlus
+                    onClick={() => {
+                      updateCart(item.id, "inc");
+                    }}
+                  />
+                </td>
+                <td>
+                  <RemoveCircleIcon
+                    onClick={() => {
+                      updateCart(item.id, "remove");
+                    }}
+                  />
+                </td>
+
+                <td>{(item.price * item.qty).toFixed(2)}</td>
+              </tr>
+            ))}
+
+            <tr>
+              <td>Sub Total</td>
+              <td align="right" colSpan={3}>
+                {subTotal}
+              </td>
+            </tr>
+            <tr>
+              <td>Discount</td>
+              <td align="right" colSpan={3}>
+                {discount}
+              </td>
+            </tr>
+            <tr>
+              <td>Grand Total</td>
+              <td align="right" colSpan={3}>
+                {grandTotal}
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+
+       <Link to='/Checkout'>
+          <Button onClick={checkouthandler} className="m-2" disabled={cart.items.length === 0} >
+            Checkout !!
+          </Button>
+        </Link>
+        
+      </div>     
+      </div>
     </div>
   );
 }
 
 export default Cart;
-

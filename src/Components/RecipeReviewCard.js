@@ -11,6 +11,8 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { CartContext } from "../App";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -24,20 +26,26 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function RecipeReviewCard({ item }) {
+ 
+ 
   const [expanded, setExpanded] = React.useState(false);
   //console.log(item,'===============')
-
   const { cart, setCart } = React.useContext(CartContext);
+  
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  let newCartItems = { ...cart };
+
 
   const cartHandler = (product) => {
-    const newCartItems = { ...cart };
     newCartItems.items = [...cart.items, { ...product, qty: 1 }];
     localStorage.setItem("newCartItems", JSON.stringify(newCartItems));
+    toast("Product Added to cart !!");
     setCart(newCartItems);
+   
+
   };
 
   return (
@@ -59,11 +67,12 @@ export default function RecipeReviewCard({ item }) {
 
         <CardActions disableSpacing>
           <IconButton
-            onClick={() => cartHandler(item)}
-            aria-label="add to favorites"
+            onClick={() => cartHandler(item) }
+            aria-label="add to cart"
           >
             <AddShoppingCartIcon />
           </IconButton>
+          <ToastContainer/>
 
           <IconButton aria-label="share">
             <ShareIcon />

@@ -12,6 +12,7 @@ import AddProduct from "./Pages/AddProduct";
 import Products from "./Pages/Products";
 import Cart from './Pages/Cart';
 import Dashboard from './Pages/Dashboard';
+import Checkout from './Pages/Checkout';
 
 
 
@@ -48,6 +49,10 @@ function App() {
       <Route
         path="/cart"
         element={<Protected Component={Cart} />}
+      />
+      <Route
+        path="/Checkout"
+        element={<Protected Component={Checkout} />}
       />
     </Routes>
   </BrowserRouter>
